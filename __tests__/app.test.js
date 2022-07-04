@@ -45,9 +45,17 @@ describe("nc-games app", () => {
           );
         });
     });
+    it.only("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
+      return request(app)
+        .get("/api/reviews/cat")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id must be a number");
+        });
+    });
   });
   describe("Bad paths", () => {
-    it("404 Not Found: invalid paths", () => {
+    it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
       return request(app)
         .get("/api/categoriez")
         .expect(404)
