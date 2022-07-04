@@ -106,19 +106,21 @@ describe("nc-games app", () => {
     it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
       return request(app)
         .patch("/api/reviews/9999")
+        .send({ inc_votes: -3 })
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("review_id not found");
         });
     });
-    // it("400 Bad Request: responds with 'review_id not found' when passed an empty request body", () => {
-    //     return request(app)
-    //       .patch("/api/reviews/9999")
-    //       .expect(404)
-    //       .then(({ body: { msg } }) => {
-    //         expect(msg).toBe("review_id not found");
-    //       });
-    //   });
+    it("400 Bad Request: responds with 'inc_votes not provided' when passed an empty request body", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("inc_votes not provided");
+        });
+    });
   });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
