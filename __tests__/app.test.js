@@ -45,12 +45,20 @@ describe("nc-games app", () => {
           );
         });
     });
-    it.only("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
+    it("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
       return request(app)
         .get("/api/reviews/cat")
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("review_id must be a number");
+        });
+    });
+    it.only("404 Bad Request: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+      return request(app)
+        .get("/api/reviews/9999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id not found");
         });
     });
   });
