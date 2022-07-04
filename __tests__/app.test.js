@@ -63,7 +63,7 @@ describe("nc-games app", () => {
     });
   });
   describe("PATCH /api/reviews/:review_id", () => {
-    it.only("200 OK: returns the updated review with +7 votes when { inc_votes : 7 } is received", () => {
+    it("200 OK: returns the updated review with +7 votes when { inc_votes : 7 } is received", () => {
       return request(app)
         .patch("/api/reviews/2")
         .send({ inc_votes: 7 })
@@ -80,6 +80,26 @@ describe("nc-games app", () => {
             category: "dexterity",
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 12,
+          });
+        });
+    });
+    it("200 OK: returns the updated review with -3 votes when { inc_votes : -3 } is received", () => {
+      return request(app)
+        .patch("/api/reviews/2")
+        .send({ inc_votes: -3 })
+        .expect(200)
+        .then(({ body: { review } }) => {
+          expect(review).toEqual({
+            review_id: 2,
+            title: "Jenga",
+            designer: "Leslie Scott",
+            owner: "philippaclaire9",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            review_body: "Fiddly fun for all the family",
+            category: "dexterity",
+            created_at: "2021-01-18T10:01:41.251Z",
+            votes: 2,
           });
         });
     });
