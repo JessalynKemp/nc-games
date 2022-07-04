@@ -24,6 +24,28 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("GET /api/reviews/:review_id", () => {
+    it("200 OK: returns a review object", () => {
+      return request(app)
+        .get("/api/reviews/5")
+        .expect(200)
+        .then(({ body: { review } }) => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              review_id: expect.any(Number),
+              title: expect.any(String),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              review_img_url: expect.any(String),
+              votes: expect.any(Number),
+              category: expect.any(String),
+              owner: expect.any(String),
+              created_at: expect.any(String),
+            })
+          );
+        });
+    });
+  });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths", () => {
       return request(app)
