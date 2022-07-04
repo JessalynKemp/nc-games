@@ -21,6 +21,9 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
     )
     .then((result) => {
       const review = result.rows[0];
-      return review;
+      // DRY - repeating this Promise.reject
+      if (!review) {
+        return Promise.reject({ status: 404, msg: "review_id not found" });
+      } else return review;
     });
 };

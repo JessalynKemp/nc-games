@@ -63,7 +63,7 @@ describe("nc-games app", () => {
     });
   });
   describe("PATCH /api/reviews/:review_id", () => {
-    it("200 OK: returns the updated review with +7 votes when { inc_votes : 7 } is received", () => {
+    it("200 OK: returns the updated review with +7 votes when { inc_votes : 7 } is received (increase)", () => {
       return request(app)
         .patch("/api/reviews/2")
         .send({ inc_votes: 7 })
@@ -83,7 +83,7 @@ describe("nc-games app", () => {
           });
         });
     });
-    it("200 OK: returns the updated review with -3 votes when { inc_votes : -3 } is received", () => {
+    it("200 OK: returns the updated review with -3 votes when { inc_votes : -3 } is received (decrease)", () => {
       return request(app)
         .patch("/api/reviews/2")
         .send({ inc_votes: -3 })
@@ -101,6 +101,14 @@ describe("nc-games app", () => {
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 2,
           });
+        });
+    });
+    it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+      return request(app)
+        .patch("/api/reviews/9999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id not found");
         });
     });
   });

@@ -24,6 +24,7 @@ app.use((err, req, res, next) => {
   } else next(err);
 });
 
+// Is there a way to make this error more dynamic? I.e. refer to review_id dynamically?
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ msg: `review_id must be a number` });
