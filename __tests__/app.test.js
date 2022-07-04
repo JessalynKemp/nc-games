@@ -24,4 +24,14 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("Bad paths", () => {
+    it("404 Not Found: invalid paths", () => {
+      return request(app)
+        .get("/api/categoriez")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("Invalid Path");
+        });
+    });
+  });
 });
