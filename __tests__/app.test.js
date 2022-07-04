@@ -32,7 +32,7 @@ describe("nc-games app", () => {
         .then(({ body: { review } }) => {
           expect(review).toEqual(
             expect.objectContaining({
-              review_id: expect.any(Number),
+              review_id: 5,
               title: expect.any(String),
               review_body: expect.any(String),
               designer: expect.any(String),
@@ -53,7 +53,7 @@ describe("nc-games app", () => {
           expect(msg).toBe("review_id must be a number");
         });
     });
-    it.only("404 Bad Request: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+    it.only("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
       return request(app)
         .get("/api/reviews/9999")
         .expect(404)
