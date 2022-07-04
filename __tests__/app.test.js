@@ -10,5 +10,18 @@ beforeEach(() => seed(data));
 afterAll(() => db.end());
 
 describe("nc-games app", () => {
-  it("first test", () => {});
+  describe("GET /api/categories", () => {
+    it("200 OK: returns an array of category objects under the key of 'categories'", () => {
+      return request(app)
+        .get("/api/categories")
+        .expect(200)
+        .then(({ body: { categories } }) => {
+          expect(categories).toHaveLength(4);
+          categories.forEach((category) => {
+            expect(category).toHaveProperty("slug");
+            expect(category).toHaveProperty("description");
+          });
+        });
+    });
+  });
 });
