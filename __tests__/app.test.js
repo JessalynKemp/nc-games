@@ -227,6 +227,28 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("POST /api/reviews/:review_id/comments", () => {
+    it("201 created: returns the new comment object that has been added to the comments table", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 7,
+            votes: 0,
+            created_at: expect.any(String),
+            author: "dav3rid",
+            body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+            review_id: 1,
+          });
+        });
+    });
+  });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
       return request(app)

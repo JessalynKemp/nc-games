@@ -1,5 +1,4 @@
 const db = require("../db/connection");
-const pg = require("pg-format");
 
 function idNotFound() {
   return Promise.reject({ status: 404, msg: "review_id not found" });
@@ -100,5 +99,21 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
       if (!review) {
         return idNotFound();
       } else return review;
+    });
+};
+
+exports.addCommentOnReview = (review_id, username, body) => {
+  return db
+    .query(
+      `
+  INSERT INTO comments (body, review_id, author, votes)
+  VALUES ($1, $2, $3, $4)
+  RETURNING *;
+  `,
+      [body, review_id, username, 0]
+    )
+    .then((result) => {
+      const comment = result.rows[0];
+      return comment;
     });
 };

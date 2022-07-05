@@ -3,7 +3,15 @@ const {
   selectReview,
   selectReviewComments,
   modifyReviewVotes,
+  addCommentOnReview,
 } = require("../models/reviews.models");
+
+function tooManyProps() {
+  return Promise.reject({
+    status: 400,
+    msg: "only updates to inc_votes are available",
+  });
+}
 
 exports.getReviews = (req, res, next) => {
   selectReviews()
@@ -53,9 +61,15 @@ exports.updateReviewVotes = (req, res, next) => {
     });
 };
 
-function tooManyProps() {
-  return Promise.reject({
-    status: 400,
-    msg: "only updates to inc_votes are available",
-  });
-}
+exports.postCommentOnReview = (req, res, next) => {
+  const { review_id } = req.params;
+  const { username, body } = req.body;
+
+  addCommentOnReview(review_id, username, body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
