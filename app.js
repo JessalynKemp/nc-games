@@ -1,6 +1,7 @@
 const express = require("express");
 const { getCategories } = require("./controllers/categories.controllers");
 const {
+  getReviews,
   getReview,
   getReviewComments,
   updateReviewVotes,
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.get("/api/categories", getCategories);
 
+app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id", getReview);
 app.get("/api/reviews/:review_id/comments", getReviewComments);
 app.patch("/api/reviews/:review_id", updateReviewVotes);

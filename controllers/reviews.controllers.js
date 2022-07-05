@@ -4,6 +4,16 @@ const {
   modifyReviewVotes,
 } = require("../models/reviews.models");
 
+exports.getReviews = (req, res, next) => {
+  selectReviews()
+    .then((reviews) => {
+      res.status(200).send({ reviews });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 exports.getReview = (req, res, next) => {
   const { review_id } = req.params;
   selectReview(review_id)
