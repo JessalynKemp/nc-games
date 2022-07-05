@@ -62,6 +62,7 @@ describe("nc-games app", () => {
         });
     });
   });
+
   describe("PATCH /api/reviews/:review_id", () => {
     it("200 OK: returns the updated review with +7 votes when { inc_votes : 7 } is received (increase)", () => {
       return request(app)
@@ -137,6 +138,21 @@ describe("nc-games app", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("only updates to inc_votes are available");
+        });
+    });
+  });
+  describe("GET /api/users", () => {
+    it("200 OK: returns an array of user objects under the key of 'users'", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { users } }) => {
+          expect(users).toHaveLength(4);
+          users.forEach((user) => {
+            expect(user).toHaveProperty("username");
+            expect(user).toHaveProperty("name");
+            expect(user).toHaveProperty("avatar_url");
+          });
         });
     });
   });
