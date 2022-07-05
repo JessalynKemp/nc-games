@@ -62,6 +62,85 @@ describe("nc-games app", () => {
         });
     });
   });
+
+  describe("PATCH /api/reviews/:review_id", () => {
+    it("200 OK: returns the updated review with +7 votes when { inc_votes : 7 } is received (increase)", () => {
+      return request(app)
+        .patch("/api/reviews/2")
+        .send({ inc_votes: 7 })
+        .expect(200)
+        .then(({ body: { review } }) => {
+          expect(review).toEqual({
+            review_id: 2,
+            title: "Jenga",
+            designer: "Leslie Scott",
+            owner: "philippaclaire9",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            review_body: "Fiddly fun for all the family",
+            category: "dexterity",
+            created_at: "2021-01-18T10:01:41.251Z",
+            votes: 12,
+          });
+        });
+    });
+    it("200 OK: returns the updated review with -3 votes when { inc_votes : -3 } is received (decrease)", () => {
+      return request(app)
+        .patch("/api/reviews/2")
+        .send({ inc_votes: -3 })
+        .expect(200)
+        .then(({ body: { review } }) => {
+          expect(review).toEqual({
+            review_id: 2,
+            title: "Jenga",
+            designer: "Leslie Scott",
+            owner: "philippaclaire9",
+            review_img_url:
+              "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+            review_body: "Fiddly fun for all the family",
+            category: "dexterity",
+            created_at: "2021-01-18T10:01:41.251Z",
+            votes: 2,
+          });
+        });
+    });
+    it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+      return request(app)
+        .patch("/api/reviews/9999")
+        .send({ inc_votes: -3 })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id not found");
+        });
+    });
+    it("400 Bad Request: responds with 'inc_votes not provided' when passed an empty request body", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("inc_votes not provided");
+        });
+    });
+    it("400 Bad Request: responds with 'inc_votes must be a number' when passed '{inc_votes: 'cat'}'", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({ inc_votes: "cat" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("inc_votes must be a number");
+        });
+    });
+    it("400 Bad Request: responds with 'only updates to inc_votes are available' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({ inc_votes: 1, name: "Mitch" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("only updates to inc_votes are available");
+        });
+    });
+  });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
       return request(app)
@@ -76,7 +155,6 @@ describe("nc-games app", () => {
           });
         });
     });
-  });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
       return request(app)
