@@ -24,6 +24,28 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("GET /api/reviews", () => {
+    it("200 OK: returns an array of review objects under the key of 'reviews'", () => {
+      return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toHaveLength(13);
+          reviews.forEach((review) => {
+            expect(review).toHaveProperty("owner");
+            expect(review).toHaveProperty("title");
+            expect(review).toHaveProperty("review_id");
+            expect(review).toHaveProperty("category");
+            expect(review).toHaveProperty("review_img_url");
+            expect(review).toHaveProperty("created_at");
+            expect(review).toHaveProperty("votes");
+            expect(review).toHaveProperty("review_body");
+            expect(review).toHaveProperty("designer");
+            expect(review).toHaveProperty("comment_count");
+          });
+        });
+    });
+  });
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {
       return request(app)

@@ -13,6 +13,22 @@ function incVotesNotNumber() {
   return Promise.reject({ status: 400, msg: "inc_votes must be a number" });
 }
 
+exports.selectReviews = () => {
+  return db
+    .query(
+      `
+    SELECT reviews.*, COUNT(comments.comment_id)::int AS comment_count 
+    FROM reviews
+    LEFT JOIN comments ON comments.review_id = reviews.review_id
+    GROUP BY reviews.review_id;
+    `
+    )
+    .then((result) => {
+      const reviews = result.rows;
+      return reviews;
+    });
+};
+
 exports.selectReview = (review_id) => {
   if (isNaN(+review_id)) {
     return idNotNumber();
