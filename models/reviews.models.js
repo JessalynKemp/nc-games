@@ -13,6 +13,17 @@ function incVotesNotNumber() {
   return Promise.reject({ status: 400, msg: "inc_votes must be a number" });
 }
 
+function checkReviewIDExists(review_id) {
+  if (!review_id) return;
+  return db
+    .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
+    .then(({ rowCount }) => {
+      if (rowCount === 0) {
+        return idNotFound();
+      }
+    });
+}
+
 exports.selectReviews = () => {
   return db
     .query(
@@ -51,6 +62,25 @@ exports.selectReview = (review_id) => {
         return idNotFound();
       } else return review;
     });
+};
+
+exports.selectReviewComments = (review_id) => {
+  if (isNaN(+review_id)) {
+    return idNotNumber();
+  }
+  return Promise.all([
+    db.query(
+      `
+  SELECT * FROM comments
+  WHERE review_id = $1
+  `,
+      [review_id]
+    ),
+    checkReviewIDExists(review_id),
+  ]).then(([result]) => {
+    const comments = result.rows;
+    return comments;
+  });
 };
 
 exports.modifyReviewVotes = (review_id, inc_votes) => {

@@ -183,6 +183,50 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("GET /api/reviews/:review_id/comments", () => {
+    it("returns an array of comments for the given review_id under the key of 'comments'", () => {
+      return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toHaveLength(3);
+          comments.forEach((comment) => {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: 2,
+            });
+          });
+        });
+    });
+    it("200 OK: responds with an empty array when the review_id exists but there are no comments", () => {
+      return request(app)
+        .get("/api/reviews/1/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([]);
+        });
+    });
+    it("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
+      return request(app)
+        .get("/api/reviews/cat/comments")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id must be a number");
+        });
+    });
+    it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+      return request(app)
+        .get("/api/reviews/9999/comments")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id not found");
+        });
+    });
+  });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
       return request(app)
