@@ -155,6 +155,7 @@ describe("nc-games app", () => {
           });
         });
     });
+  });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
       return request(app)
