@@ -202,12 +202,28 @@ describe("nc-games app", () => {
           });
         });
     });
+    it("200 OK: responds with an empty array when the review_id exists but there are no comments", () => {
+      return request(app)
+        .get("/api/reviews/1/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toEqual([]);
+        });
+    });
     it("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
       return request(app)
         .get("/api/reviews/cat/comments")
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("review_id must be a number");
+        });
+    });
+    it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+      return request(app)
+        .get("/api/reviews/9999/comments")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id not found");
         });
     });
   });
