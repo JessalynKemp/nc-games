@@ -149,6 +149,26 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("GET /api/reviews/:review_id/comments", () => {
+    it("returns an array of comments for the given review_id under the key of 'comments'", () => {
+      return request(app)
+        .get("/api/reviews/2/comments")
+        .expect(200)
+        .then(({ body: { comments } }) => {
+          expect(comments).toHaveLength(3);
+          comments.forEach((comment) => {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: 2,
+            });
+          });
+        });
+    });
+  });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
       return request(app)

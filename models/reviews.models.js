@@ -36,6 +36,21 @@ exports.selectReview = (review_id) => {
     });
 };
 
+exports.selectReviewComments = (review_id) => {
+  return db
+    .query(
+      `
+  SELECT * FROM comments
+  WHERE review_id = $1
+  `,
+      [review_id]
+    )
+    .then((result) => {
+      const comments = result.rows;
+      return comments;
+    });
+};
+
 exports.modifyReviewVotes = (review_id, inc_votes) => {
   if (inc_votes === undefined) {
     return Promise.reject({ status: 400, msg: "inc_votes not provided" });
