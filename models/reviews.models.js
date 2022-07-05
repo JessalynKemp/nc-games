@@ -79,9 +79,7 @@ exports.selectReviewComments = (review_id) => {
     checkReviewIDExists(review_id),
   ]).then(([result]) => {
     const comments = result.rows;
-    if (!comments) {
-      return idNotFound();
-    } else return comments;
+    return comments;
   });
 };
 
