@@ -121,6 +121,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("inc_votes not provided");
         });
     });
+    it("400 Bad Request: responds with 'inc_votes must be a number' when passed '{inc_votes: 'cat'}'", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({ inc_votes: "cat" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("inc_votes must be a number");
+        });
+    });
   });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {

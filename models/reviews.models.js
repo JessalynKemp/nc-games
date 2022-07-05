@@ -9,6 +9,10 @@ function idNotNumber() {
   return Promise.reject({ status: 400, msg: "review_id must be a number" });
 }
 
+function incVotesNotNumber() {
+  return Promise.reject({ status: 400, msg: "inc_votes must be a number" });
+}
+
 exports.selectReview = (review_id) => {
   if (isNaN(+review_id)) {
     return idNotNumber();
@@ -26,6 +30,9 @@ exports.selectReview = (review_id) => {
 exports.modifyReviewVotes = (review_id, inc_votes) => {
   if (inc_votes === undefined) {
     return Promise.reject({ status: 400, msg: "inc_votes not provided" });
+  }
+  if (isNaN(+inc_votes)) {
+    return incVotesNotNumber();
   }
   return db
     .query(
