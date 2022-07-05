@@ -45,6 +45,14 @@ describe("nc-games app", () => {
           );
         });
     });
+    it("200 OK: the review object has a comment_count property", () => {
+      return request(app)
+        .get("/api/reviews/2")
+        .expect(200)
+        .then(({ body: { review } }) => {
+          expect(review.comment_count).toBe(3);
+        });
+    });
     it("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
       return request(app)
         .get("/api/reviews/cat")
