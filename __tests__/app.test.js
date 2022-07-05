@@ -18,8 +18,10 @@ describe("nc-games app", () => {
         .then(({ body: { categories } }) => {
           expect(categories).toHaveLength(4);
           categories.forEach((category) => {
-            expect(category).toHaveProperty("slug");
-            expect(category).toHaveProperty("description");
+            expect(category).toMatchObject({
+              slug: expect.any(String),
+              description: expect.any(String),
+            });
           });
         });
     });
@@ -32,16 +34,18 @@ describe("nc-games app", () => {
         .then(({ body: { reviews } }) => {
           expect(reviews).toHaveLength(13);
           reviews.forEach((review) => {
-            expect(review).toHaveProperty("owner");
-            expect(review).toHaveProperty("title");
-            expect(review).toHaveProperty("review_id");
-            expect(review).toHaveProperty("category");
-            expect(review).toHaveProperty("review_img_url");
-            expect(review).toHaveProperty("created_at");
-            expect(review).toHaveProperty("votes");
-            expect(review).toHaveProperty("review_body");
-            expect(review).toHaveProperty("designer");
-            expect(review).toHaveProperty("comment_count");
+            expect(review).toMatchObject({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: expect.any(String),
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              comment_count: expect.any(Number),
+            });
           });
         });
     });
@@ -187,9 +191,11 @@ describe("nc-games app", () => {
         .then(({ body: { users } }) => {
           expect(users).toHaveLength(4);
           users.forEach((user) => {
-            expect(user).toHaveProperty("username");
-            expect(user).toHaveProperty("name");
-            expect(user).toHaveProperty("avatar_url");
+            expect(user).toMatchObject({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            });
           });
         });
     });
