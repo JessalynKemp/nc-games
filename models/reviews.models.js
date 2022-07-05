@@ -54,6 +54,9 @@ exports.selectReview = (review_id) => {
 };
 
 exports.selectReviewComments = (review_id) => {
+  if (isNaN(+review_id)) {
+    return idNotNumber();
+  }
   return db
     .query(
       `

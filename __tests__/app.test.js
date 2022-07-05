@@ -202,6 +202,14 @@ describe("nc-games app", () => {
           });
         });
     });
+    it("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
+      return request(app)
+        .get("/api/reviews/cat/comments")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id must be a number");
+        });
+    });
   });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
