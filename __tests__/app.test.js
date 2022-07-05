@@ -130,6 +130,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("inc_votes must be a number");
         });
     });
+    it("400 Bad Request: responds with 'only updates to inc_votes are available' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({ inc_votes: 1, name: "Mitch" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("only updates to inc_votes are available");
+        });
+    });
   });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
