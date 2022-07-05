@@ -53,12 +53,27 @@ describe("nc-games app", () => {
           expect(msg).toBe("review_id must be a number");
         });
     });
-    it.only("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+    it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
       return request(app)
         .get("/api/reviews/9999")
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("review_id not found");
+        });
+    });
+  });
+  describe("GET /api/users", () => {
+    it("200 OK: returns an array of user objects under the key of 'users'", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({ body: { users } }) => {
+          expect(users).toHaveLength(4);
+          users.forEach((user) => {
+            expect(user).toHaveProperty("username");
+            expect(user).toHaveProperty("name");
+            expect(user).toHaveProperty("avatar_url");
+          });
         });
     });
   });
