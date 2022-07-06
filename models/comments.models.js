@@ -78,3 +78,22 @@ exports.addCommentOnReview = (review_id, username, body) => {
     return comment;
   });
 };
+
+exports.removeComment = (comment_id) => {
+  if (isNaN(+comment_id)) {
+    return notNumber("comment_id");
+  }
+  return db
+    .query(
+      `
+    DELETE FROM comments WHERE comment_id = $1 RETURNING *
+  `,
+      [comment_id]
+    )
+    .then((result) => {
+      const deletedComment = result.rows[0];
+      if (!deletedComment) {
+        return notFound("comment_id");
+      } else return deletedComment;
+    });
+};
