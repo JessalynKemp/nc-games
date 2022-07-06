@@ -495,6 +495,14 @@ describe("nc-games app", () => {
           expect(msg).toBe("comment_id must be a number");
         });
     });
+    it("404 Not Found: responds with 'comment_id not found' when passed a comment_id that does not exist", () => {
+      return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment_id not found");
+        });
+    });
   });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
