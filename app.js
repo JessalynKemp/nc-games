@@ -9,6 +9,7 @@ const { getUsers } = require("./controllers/users.controllers");
 const {
   getReviewComments,
   postCommentOnReview,
+  deleteComment,
 } = require("./controllers/comments.controllers");
 const { getEndpoints } = require("./controllers/api.controllers.js");
 
@@ -25,14 +26,19 @@ app.get("/api/categories", getCategories);
 // -- GET
 app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id", getReview);
-app.get("/api/reviews/:review_id/comments", getReviewComments);
 // -- PATCH
 app.patch("/api/reviews/:review_id", updateReviewVotes);
-// -- POST
-app.post("/api/reviews/:review_id/comments", postCommentOnReview);
 
 // Users
 app.get("/api/users", getUsers);
+
+// Comments
+// -- GET
+app.get("/api/reviews/:review_id/comments", getReviewComments);
+// -- POST
+app.post("/api/reviews/:review_id/comments", postCommentOnReview);
+// -- DELETE
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use("*", (req, res) => {
   res.status(404).send({ msg: "Invalid Path" });

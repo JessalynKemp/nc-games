@@ -483,8 +483,36 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("DELETE /api/comments/:comment_id", () => {
+    it("204 No Content: deletes the comment with the given comment_id", () => {
+      return request(app).delete("/api/comments/2").expect(204);
+    });
+    it("400 Bad Request: responds with 'comment_id must be a number' when passed a comment_id of the wrong type", () => {
+      return request(app)
+        .delete("/api/comments/cat")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment_id must be a number");
+        });
+    });
+    it("404 Not Found: responds with 'comment_id not found' when passed a comment_id that does not exist", () => {
+      return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment_id not found");
+        });
+    });
+    it("404 Not Found: responds with 'comment_id not found' when passed a comment_id that has just been deleted", () => {
+      return request(app)
+        .delete("/api/comments/2")
+        .then(() => {
+          return request(app).delete("/api/comments/2").expect(404);
+        });
+    });
+  });
   describe("GET /api", () => {
-    it.only("200 OK: returns a json object containing all endpoints as keys with a description of what they do", () => {
+    it("200 OK: returns a json object containing all endpoints as keys with a description of what they do", () => {
       return request(app)
         .get("/api")
         .expect(200)
