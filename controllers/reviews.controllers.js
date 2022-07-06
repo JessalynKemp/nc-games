@@ -3,7 +3,7 @@ const {
   selectReview,
   modifyReviewVotes,
 } = require("../models/reviews.models");
-const { tooManyPropsReviews } = require("../error-messages/errors");
+const { tooManyProps } = require("../error-messages/errors");
 
 exports.getReviews = (req, res, next) => {
   selectReviews()
@@ -33,7 +33,7 @@ exports.updateReviewVotes = (req, res, next) => {
   modifyReviewVotes(review_id, inc_votes)
     .then((review) => {
       if (Object.keys(req.body).length > 1) {
-        return tooManyPropsReviews();
+        return tooManyProps(req.body, ["inc_votes"]);
       }
       res.status(200).send({ review });
     })

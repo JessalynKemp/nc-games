@@ -179,7 +179,7 @@ describe("nc-games app", () => {
         .send({ inc_votes: 1, name: "Mitch" })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("only updates to inc_votes are available");
+          expect(msg).toBe("only inc_votes is required");
         });
     });
   });
@@ -320,9 +320,7 @@ describe("nc-games app", () => {
         .send(newComment)
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe(
-            "only username and body are needed to post a comment"
-          );
+          expect(msg).toBe("only username and body are required");
         });
     });
   });

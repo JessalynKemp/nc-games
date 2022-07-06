@@ -1,33 +1,25 @@
-exports.tooManyPropsReviews = () => {
-  return Promise.reject({
-    status: 400,
-    msg: "only updates to inc_votes are available",
-  });
+exports.tooManyProps = (requestBody, props) => {
+  for (const bodyProp in requestBody) {
+    if (!props.includes(bodyProp)) {
+      const errorStr = props.join(" and ");
+      let isAre = "";
+      props.length > 1 ? (isAre = "are") : (isAre = "is");
+      return Promise.reject({
+        status: 400,
+        msg: `only ${errorStr} ${isAre} required`,
+      });
+    }
+  }
 };
 
-exports.tooManyPropsComments = () => {
-  return Promise.reject({
-    status: 400,
-    msg: "only username and body are needed to post a comment",
-  });
+exports.notFound = (param) => {
+  return Promise.reject({ status: 404, msg: `${param} not found` });
 };
 
-exports.idNotFound = () => {
-  return Promise.reject({ status: 404, msg: "review_id not found" });
+exports.notNumber = (param) => {
+  return Promise.reject({ status: 400, msg: `${param} must be a number` });
 };
 
-exports.idNotNumber = () => {
-  return Promise.reject({ status: 400, msg: "review_id must be a number" });
-};
-
-exports.incVotesNotNumber = () => {
-  return Promise.reject({ status: 400, msg: "inc_votes must be a number" });
-};
-
-exports.usernameNotFound = () => {
-  return Promise.reject({ status: 404, msg: "username not found" });
-};
-
-exports.bodyNotString = () => {
-  return Promise.reject({ status: 400, msg: "body must be a string" });
+exports.notString = (param) => {
+  return Promise.reject({ status: 400, msg: `${param} must be a string` });
 };

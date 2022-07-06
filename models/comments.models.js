@@ -1,10 +1,5 @@
 const db = require("../db/connection");
-const {
-  idNotNumber,
-  idNotFound,
-  usernameNotFound,
-  bodyNotString,
-} = require("../error-messages/errors");
+const { notNumber, notFound, notString } = require("../error-messages/errors");
 
 function checkReviewIDExists(review_id) {
   if (!review_id) return;
@@ -12,7 +7,7 @@ function checkReviewIDExists(review_id) {
     .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
     .then(({ rowCount }) => {
       if (rowCount === 0) {
-        return idNotFound();
+        return notFound("review_id");
       }
     });
 }
@@ -23,14 +18,14 @@ function checkUserExists(username) {
     .query(`SELECT * FROM users WHERE username = $1`, [username])
     .then(({ rowCount }) => {
       if (rowCount === 0) {
-        return usernameNotFound();
+        return notFound("username");
       }
     });
 }
 
 exports.selectReviewComments = (review_id) => {
   if (isNaN(+review_id)) {
-    return idNotNumber();
+    return notNumber("review_id");
   }
   return Promise.all([
     db.query(
@@ -49,7 +44,7 @@ exports.selectReviewComments = (review_id) => {
 
 exports.addCommentOnReview = (review_id, username, body) => {
   if (isNaN(+review_id)) {
-    return idNotNumber();
+    return notNumber("review_id");
   }
   if (username === undefined || body === undefined) {
     return Promise.reject({
@@ -58,7 +53,7 @@ exports.addCommentOnReview = (review_id, username, body) => {
     });
   }
   if (typeof body !== "string") {
-    return bodyNotString();
+    return notString("body");
   }
   return Promise.all([
     checkReviewIDExists(review_id),

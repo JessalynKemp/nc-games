@@ -1,9 +1,5 @@
 const db = require("../db/connection");
-const {
-  idNotFound,
-  idNotNumber,
-  incVotesNotNumber,
-} = require("../error-messages/errors");
+const { notFound, notNumber } = require("../error-messages/errors");
 
 exports.selectReviews = () => {
   return db
@@ -24,7 +20,7 @@ exports.selectReviews = () => {
 
 exports.selectReview = (review_id) => {
   if (isNaN(+review_id)) {
-    return idNotNumber();
+    return notNumber("review_id");
   }
   return db
     .query(
@@ -40,7 +36,7 @@ exports.selectReview = (review_id) => {
     .then((result) => {
       const review = result.rows[0];
       if (!review) {
-        return idNotFound();
+        return notFound("review_id");
       } else return review;
     });
 };
@@ -50,7 +46,7 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
     return Promise.reject({ status: 400, msg: "inc_votes not provided" });
   }
   if (isNaN(+inc_votes)) {
-    return incVotesNotNumber();
+    return notNumber("inc_votes");
   }
   return db
     .query(
@@ -60,7 +56,7 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
     .then((result) => {
       const review = result.rows[0];
       if (!review) {
-        return idNotFound();
+        return notFound("review_id");
       } else return review;
     });
 };
