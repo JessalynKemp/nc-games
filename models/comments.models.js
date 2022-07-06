@@ -1,5 +1,10 @@
 const db = require("../db/connection");
-const { notNumber, notFound, notString } = require("../error-messages/errors");
+const {
+  notNumber,
+  notFound,
+  notString,
+  notProvided,
+} = require("../error-messages/errors");
 
 function checkReviewIDExists(review_id) {
   if (!review_id) return;
@@ -46,11 +51,10 @@ exports.addCommentOnReview = (review_id, username, body) => {
   if (isNaN(+review_id)) {
     return notNumber("review_id");
   }
-  if (username === undefined || body === undefined) {
-    return Promise.reject({
-      status: 400,
-      msg: "username and body not provided",
-    });
+  if (username === undefined && body === undefined) {
+    return notProvided(["username", "body"]);
+  } else if (username === undefined) {
+    return notProvided(["username"]);
   }
   if (typeof body !== "string") {
     return notString("body");
