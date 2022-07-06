@@ -3,6 +3,7 @@ const {
   idNotNumber,
   idNotFound,
   usernameNotFound,
+  bodyNotString,
 } = require("../error-messages/errors");
 
 function checkReviewIDExists(review_id) {
@@ -55,6 +56,9 @@ exports.addCommentOnReview = (review_id, username, body) => {
       status: 400,
       msg: "username and body not provided",
     });
+  }
+  if (typeof body !== "string") {
+    return bodyNotString();
   }
   return Promise.all([
     checkReviewIDExists(review_id),

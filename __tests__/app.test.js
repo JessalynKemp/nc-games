@@ -296,6 +296,19 @@ describe("nc-games app", () => {
           expect(msg).toBe("username not found");
         });
     });
+    it("400 Bad Request: responds with 'body must be a string' when passed a body that is a number in the request", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: 1,
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("body must be a string");
+        });
+    });
   });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
