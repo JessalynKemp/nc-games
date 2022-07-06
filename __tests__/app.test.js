@@ -107,7 +107,17 @@ describe("nc-games app", () => {
           });
         });
     });
+    it("200 OK: returns an empty array when the category exists but there are no reviews", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "children's games" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toEqual([]);
+        });
+    });
   });
+
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {
       return request(app)
