@@ -483,6 +483,11 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("DELETE /api/comments/:comment_id", () => {
+    it("204 No Content: deletes the comment with the given comment_id", () => {
+      return request(app).delete("/api/comments/2").expect(204);
+    });
+  });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
       return request(app)
