@@ -3,9 +3,23 @@ const {
   notFound,
   notNumber,
   notProvided,
+  cannotSort,
 } = require("../error-messages/errors");
 
 exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
+  const validSorts = [
+    "review_id",
+    "title",
+    "category",
+    "designer",
+    "owner",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  if (!validSorts.includes(sort_by)) {
+    return cannotSort(sort_by);
+  }
   let queryStr = `
   SELECT reviews.*, COUNT(comments.comment_id)::int AS comment_count 
   FROM reviews

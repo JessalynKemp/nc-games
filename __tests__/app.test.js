@@ -126,6 +126,15 @@ describe("nc-games app", () => {
           expect(reviews).toBeSortedBy("votes");
         });
     });
+    it("400 Bad Request: responds with 'cannot sort by review_body' when sort_by query is review_body", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "review_body" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("cannot sort by review_body");
+        });
+    });
   });
 
   describe("GET /api/reviews/:review_id", () => {
