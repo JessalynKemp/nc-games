@@ -179,7 +179,7 @@ describe("nc-games app", () => {
         .send({ inc_votes: 1, name: "Mitch" })
         .expect(400)
         .then(({ body: { msg } }) => {
-          expect(msg).toBe("only updates to inc_votes are available");
+          expect(msg).toBe("only inc_votes is required");
         });
     });
   });
@@ -224,6 +224,121 @@ describe("nc-games app", () => {
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("review_id not found");
+        });
+    });
+  });
+  describe("POST /api/reviews/:review_id/comments", () => {
+    it("201 created: returns the new comment object that has been added to the comments table", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(201)
+        .then(({ body: { comment } }) => {
+          expect(comment).toMatchObject({
+            comment_id: 7,
+            votes: 0,
+            created_at: expect.any(String),
+            author: "dav3rid",
+            body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+            review_id: 1,
+          });
+        });
+    });
+    it("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
+      return request(app)
+        .post("/api/reviews/cat/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id must be a number");
+        });
+    });
+    it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
+      return request(app)
+        .post("/api/reviews/9999/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id not found");
+        });
+    });
+    it("400 Bad Request: responds with 'username and body not provided' when passed an empty request body", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username and body not provided");
+        });
+    });
+    it("400 Bad Request: responds with 'username not provided' when passed a request body that only contains a body", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({ body: "testing" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username not provided");
+        });
+    });
+    it("400 Bad Request: responds with 'body not provided' when passed a request body that only contains a username", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({ username: "dav3rid" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("body not provided");
+        });
+    });
+    it("404 not found: responds with 'username not found' when passed a request body with a user who does not exist", () => {
+      const newComment = {
+        username: "J3ss",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username not found");
+        });
+    });
+    it("400 Bad Request: responds with 'body must be a string' when passed a body that is a number in the request", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: 1,
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("body must be a string");
+        });
+    });
+    it("400 Bad Request: responds with 'only username and body are needed to post a comment' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+        votes: 1000,
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("only username and body are required");
         });
     });
   });

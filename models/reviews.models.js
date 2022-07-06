@@ -1,28 +1,9 @@
 const db = require("../db/connection");
-const pg = require("pg-format");
-
-function idNotFound() {
-  return Promise.reject({ status: 404, msg: "review_id not found" });
-}
-
-function idNotNumber() {
-  return Promise.reject({ status: 400, msg: "review_id must be a number" });
-}
-
-function incVotesNotNumber() {
-  return Promise.reject({ status: 400, msg: "inc_votes must be a number" });
-}
-
-function checkReviewIDExists(review_id) {
-  if (!review_id) return;
-  return db
-    .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
-    .then(({ rowCount }) => {
-      if (rowCount === 0) {
-        return idNotFound();
-      }
-    });
-}
+const {
+  notFound,
+  notNumber,
+  notProvided,
+} = require("../error-messages/errors");
 
 exports.selectReviews = () => {
   return db
@@ -43,7 +24,7 @@ exports.selectReviews = () => {
 
 exports.selectReview = (review_id) => {
   if (isNaN(+review_id)) {
-    return idNotNumber();
+    return notNumber("review_id");
   }
   return db
     .query(
@@ -59,36 +40,17 @@ exports.selectReview = (review_id) => {
     .then((result) => {
       const review = result.rows[0];
       if (!review) {
-        return idNotFound();
+        return notFound("review_id");
       } else return review;
     });
 };
 
-exports.selectReviewComments = (review_id) => {
-  if (isNaN(+review_id)) {
-    return idNotNumber();
-  }
-  return Promise.all([
-    db.query(
-      `
-  SELECT * FROM comments
-  WHERE review_id = $1
-  `,
-      [review_id]
-    ),
-    checkReviewIDExists(review_id),
-  ]).then(([result]) => {
-    const comments = result.rows;
-    return comments;
-  });
-};
-
 exports.modifyReviewVotes = (review_id, inc_votes) => {
   if (inc_votes === undefined) {
-    return Promise.reject({ status: 400, msg: "inc_votes not provided" });
+    return notProvided("inc_votes");
   }
   if (isNaN(+inc_votes)) {
-    return incVotesNotNumber();
+    return notNumber("inc_votes");
   }
   return db
     .query(
@@ -98,7 +60,7 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
     .then((result) => {
       const review = result.rows[0];
       if (!review) {
-        return idNotFound();
+        return notFound("review_id");
       } else return review;
     });
 };

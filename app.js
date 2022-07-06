@@ -3,21 +3,31 @@ const { getCategories } = require("./controllers/categories.controllers");
 const {
   getReviews,
   getReview,
-  getReviewComments,
   updateReviewVotes,
 } = require("./controllers/reviews.controllers");
 const { getUsers } = require("./controllers/users.controllers");
+const {
+  getReviewComments,
+  postCommentOnReview,
+} = require("./controllers/comments.controllers");
 
 const app = express();
 app.use(express.json());
 
+// Categories
 app.get("/api/categories", getCategories);
 
+// Reviews
+// -- GET
 app.get("/api/reviews", getReviews);
 app.get("/api/reviews/:review_id", getReview);
 app.get("/api/reviews/:review_id/comments", getReviewComments);
+// -- PATCH
 app.patch("/api/reviews/:review_id", updateReviewVotes);
+// -- POST
+app.post("/api/reviews/:review_id/comments", postCommentOnReview);
 
+// Users
 app.get("/api/users", getUsers);
 
 app.use("*", (req, res) => {
