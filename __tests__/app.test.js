@@ -292,6 +292,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("username not provided");
         });
     });
+    it("400 Bad Request: responds with 'body not provided' when passed a request body that only contains a username", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({ username: "dav3rid" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("body not provided");
+        });
+    });
     it("404 not found: responds with 'username not found' when passed a request body with a user who does not exist", () => {
       const newComment = {
         username: "J3ss",
