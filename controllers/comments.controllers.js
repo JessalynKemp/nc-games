@@ -21,7 +21,7 @@ exports.postCommentOnReview = (req, res, next) => {
   addCommentOnReview(review_id, username, body)
     .then((comment) => {
       if (Object.keys(req.body).length > 2) {
-        return tooManyProps(req.body, ["username", "body"]);
+        return tooManyProps(req.body, "username", "body");
       }
       res.status(201).send({ comment });
     })

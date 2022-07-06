@@ -33,7 +33,7 @@ exports.updateReviewVotes = (req, res, next) => {
   modifyReviewVotes(review_id, inc_votes)
     .then((review) => {
       if (Object.keys(req.body).length > 1) {
-        return tooManyProps(req.body, ["inc_votes"]);
+        return tooManyProps(req.body, "inc_votes");
       }
       res.status(200).send({ review });
     })

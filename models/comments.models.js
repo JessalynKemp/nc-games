@@ -52,11 +52,11 @@ exports.addCommentOnReview = (review_id, username, body) => {
     return notNumber("review_id");
   }
   if (username === undefined && body === undefined) {
-    return notProvided(["username", "body"]);
+    return notProvided("username", "body");
   } else if (username === undefined) {
-    return notProvided(["username"]);
+    return notProvided("username");
   } else if (body === undefined) {
-    return notProvided(["body"]);
+    return notProvided("body");
   }
   if (typeof body !== "string") {
     return notString("body");

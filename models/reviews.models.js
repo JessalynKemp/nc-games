@@ -1,5 +1,9 @@
 const db = require("../db/connection");
-const { notFound, notNumber } = require("../error-messages/errors");
+const {
+  notFound,
+  notNumber,
+  notProvided,
+} = require("../error-messages/errors");
 
 exports.selectReviews = () => {
   return db
@@ -43,7 +47,7 @@ exports.selectReview = (review_id) => {
 
 exports.modifyReviewVotes = (review_id, inc_votes) => {
   if (inc_votes === undefined) {
-    return Promise.reject({ status: 400, msg: "inc_votes not provided" });
+    return notProvided("inc_votes");
   }
   if (isNaN(+inc_votes)) {
     return notNumber("inc_votes");

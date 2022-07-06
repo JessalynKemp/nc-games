@@ -1,4 +1,4 @@
-exports.tooManyProps = (requestBody, props) => {
+exports.tooManyProps = (requestBody, ...props) => {
   for (const bodyProp in requestBody) {
     if (!props.includes(bodyProp)) {
       const errorStr = props.join(" and ");
@@ -24,7 +24,7 @@ exports.notString = (param) => {
   return Promise.reject({ status: 400, msg: `${param} must be a string` });
 };
 
-exports.notProvided = (params) => {
+exports.notProvided = (...params) => {
   const errorStr = params.join(" and ");
   return Promise.reject({
     status: 400,
