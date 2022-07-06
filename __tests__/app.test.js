@@ -283,6 +283,19 @@ describe("nc-games app", () => {
           expect(msg).toBe("username and body not provided");
         });
     });
+    it("404 not found: responds with 'username not found' when passed a request body with a user who does not exist", () => {
+      const newComment = {
+        username: "J3ss",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username not found");
+        });
+    });
   });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {

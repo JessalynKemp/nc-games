@@ -1,13 +1,28 @@
 const db = require("../db/connection");
-const { idNotNumber, idNotFound } = require("../error-messages/errors");
+const {
+  idNotNumber,
+  idNotFound,
+  usernameNotFound,
+} = require("../error-messages/errors");
 
 function checkReviewIDExists(review_id) {
-  if (!review_id);
+  if (!review_id) return;
   return db
     .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
     .then(({ rowCount }) => {
       if (rowCount === 0) {
         return idNotFound();
+      }
+    });
+}
+
+function checkUserExists(username) {
+  if (!username) return;
+  return db
+    .query(`SELECT * FROM users WHERE username = $1`, [username])
+    .then(({ rowCount }) => {
+      if (rowCount === 0) {
+        return usernameNotFound();
       }
     });
 }
@@ -43,6 +58,7 @@ exports.addCommentOnReview = (review_id, username, body) => {
   }
   return Promise.all([
     checkReviewIDExists(review_id),
+    checkUserExists(username),
     db.query(
       `
     INSERT INTO comments (body, review_id, author, votes)
@@ -52,7 +68,7 @@ exports.addCommentOnReview = (review_id, username, body) => {
       [body, review_id, username, 0]
     ),
     ,
-  ]).then(([, result]) => {
+  ]).then(([, , result]) => {
     const comment = result.rows[0];
     return comment;
   });
