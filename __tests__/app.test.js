@@ -487,6 +487,14 @@ describe("nc-games app", () => {
     it("204 No Content: deletes the comment with the given comment_id", () => {
       return request(app).delete("/api/comments/2").expect(204);
     });
+    it("400 Bad Request: responds with 'comment_id must be a number' when passed a comment_id of the wrong type", () => {
+      return request(app)
+        .delete("/api/comments/cat")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment_id must be a number");
+        });
+    });
   });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
