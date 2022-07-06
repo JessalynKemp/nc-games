@@ -153,6 +153,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("bananas not found");
         });
     });
+    it("400 Bad Request: responds with 'order must be asc or desc' when order query is not asc or desc", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ order: "bananas" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("order must be asc or desc");
+        });
+    });
   });
 
   describe("GET /api/reviews/:review_id", () => {

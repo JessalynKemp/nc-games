@@ -8,9 +8,6 @@ const {
 } = require("../error-messages/errors");
 
 exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
-  if (!isNaN(+sort_by)) {
-    return notString("sort_by");
-  }
   const validSorts = [
     "review_id",
     "title",
@@ -22,9 +19,17 @@ exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
     "comment_count",
   ];
   const invalidSorts = ["review_img_url", "review_body"];
+  const validOrders = ["asc", "desc"];
+
+  if (!isNaN(+sort_by)) {
+    return notString("sort_by");
+  }
   if (!validSorts.includes(sort_by)) {
     if (!invalidSorts.includes(sort_by)) return notFound(sort_by);
     else return cannotSort(sort_by);
+  }
+  if (!validOrders.includes(order)) {
+    return Promise.reject({ status: 400, msg: `order must be asc or desc` });
   }
   let queryStr = `
   SELECT reviews.*, COUNT(comments.comment_id)::int AS comment_count 
