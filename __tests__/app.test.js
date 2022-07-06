@@ -249,11 +249,29 @@ describe("nc-games app", () => {
         });
     });
     it("400 Bad Request: responds with 'review_id must be a number' when passed a review_id of the wrong type", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
       return request(app)
         .post("/api/reviews/cat/comments")
+        .send(newComment)
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("review_id must be a number");
+        });
+    });
+    it("404 Not Found: responds with 'review_id not found' when passed a review_id that does not exist", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+      };
+      return request(app)
+        .post("/api/reviews/9999/comments")
+        .send(newComment)
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("review_id not found");
         });
     });
   });

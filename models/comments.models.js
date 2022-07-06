@@ -2,7 +2,7 @@ const db = require("../db/connection");
 const { idNotNumber, idNotFound } = require("../error-messages/errors");
 
 function checkReviewIDExists(review_id) {
-  if (!review_id) return;
+  if (!review_id);
   return db
     .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
     .then(({ rowCount }) => {
@@ -35,17 +35,19 @@ exports.addCommentOnReview = (review_id, username, body) => {
   if (isNaN(+review_id)) {
     return idNotNumber();
   }
-  return db
-    .query(
+  return Promise.all([
+    checkReviewIDExists(review_id),
+    db.query(
       `
     INSERT INTO comments (body, review_id, author, votes)
     VALUES ($1, $2, $3, $4)
     RETURNING *;
     `,
       [body, review_id, username, 0]
-    )
-    .then((result) => {
-      const comment = result.rows[0];
-      return comment;
-    });
+    ),
+    ,
+  ]).then(([, result]) => {
+    const comment = result.rows[0];
+    return comment;
+  });
 };

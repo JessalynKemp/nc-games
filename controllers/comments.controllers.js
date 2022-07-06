@@ -17,7 +17,6 @@ exports.getReviewComments = (req, res, next) => {
 exports.postCommentOnReview = (req, res, next) => {
   const { review_id } = req.params;
   const { username, body } = req.body;
-
   addCommentOnReview(review_id, username, body)
     .then((comment) => {
       res.status(201).send({ comment });
