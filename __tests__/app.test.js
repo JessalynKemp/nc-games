@@ -144,6 +144,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("sort_by must be a string");
         });
     });
+    it("404 Not Found: responds with 'bananas not found' when sort_by query does not exist", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "bananas" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("bananas not found");
+        });
+    });
   });
 
   describe("GET /api/reviews/:review_id", () => {

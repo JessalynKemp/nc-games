@@ -21,8 +21,10 @@ exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
     "votes",
     "comment_count",
   ];
+  const invalidSorts = ["review_img_url", "review_body"];
   if (!validSorts.includes(sort_by)) {
-    return cannotSort(sort_by);
+    if (!invalidSorts.includes(sort_by)) return notFound(sort_by);
+    else return cannotSort(sort_by);
   }
   let queryStr = `
   SELECT reviews.*, COUNT(comments.comment_id)::int AS comment_count 
