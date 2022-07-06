@@ -171,6 +171,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("category must be a string");
         });
     });
+    it("404 Not Found: responds with 'category not found' when category query does not exist", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "campaign" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("category not found");
+        });
+    });
   });
 
   describe("GET /api/reviews/:review_id", () => {

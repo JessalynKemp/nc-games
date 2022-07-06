@@ -7,6 +7,17 @@ const {
   notString,
 } = require("../error-messages/errors");
 
+function checkCategoryExists(category) {
+  if (!category) return;
+  return db
+    .query(`SELECT * FROM categories WHERE slug = $1`, [category])
+    .then(({ rowCount }) => {
+      if (rowCount === 0) {
+        return notFound("category");
+      }
+    });
+}
+
 exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
   const validSorts = [
     "review_id",
@@ -48,7 +59,10 @@ exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
     GROUP BY reviews.review_id
     ORDER BY ${sort_by} ${order}
    `;
-  return db.query(queryStr, queryValues).then((result) => {
+  return Promise.all([
+    checkCategoryExists(category),
+    db.query(queryStr, queryValues),
+  ]).then(([, result]) => {
     const reviews = result.rows;
     return reviews;
   });
