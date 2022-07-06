@@ -32,6 +32,9 @@ exports.selectReviewComments = (review_id) => {
 };
 
 exports.addCommentOnReview = (review_id, username, body) => {
+  if (isNaN(+review_id)) {
+    return idNotNumber();
+  }
   return db
     .query(
       `
