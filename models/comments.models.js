@@ -35,6 +35,12 @@ exports.addCommentOnReview = (review_id, username, body) => {
   if (isNaN(+review_id)) {
     return idNotNumber();
   }
+  if (username === undefined && body === undefined) {
+    return Promise.reject({
+      status: 400,
+      msg: "username and body not provided",
+    });
+  }
   return Promise.all([
     checkReviewIDExists(review_id),
     db.query(

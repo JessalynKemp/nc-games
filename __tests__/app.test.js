@@ -274,6 +274,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("review_id not found");
         });
     });
+    it("400 Bad Request: responds with 'username and body not provided' when passed an empty request body", () => {
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username and body not provided");
+        });
+    });
   });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
