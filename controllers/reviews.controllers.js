@@ -6,9 +6,10 @@ const {
 const { tooManyProps } = require("../error-messages/errors");
 
 exports.getReviews = (req, res, next) => {
-  const { sort_by } = req.query;
-  selectReviews(sort_by)
+  const { sort_by, order } = req.query;
+  selectReviews(sort_by, order)
     .then((reviews) => {
+      console.log(reviews);
       res.status(200).send({ reviews });
     })
     .catch((err) => {

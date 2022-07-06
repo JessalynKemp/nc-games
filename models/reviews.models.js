@@ -5,7 +5,7 @@ const {
   notProvided,
 } = require("../error-messages/errors");
 
-exports.selectReviews = (sort_by = "created_at") => {
+exports.selectReviews = (sort_by = "created_at", order = "desc") => {
   return db
     .query(
       `
@@ -13,7 +13,7 @@ exports.selectReviews = (sort_by = "created_at") => {
     FROM reviews
     LEFT JOIN comments ON comments.review_id = reviews.review_id
     GROUP BY reviews.review_id
-    ORDER BY ${sort_by} DESC;
+    ORDER BY ${sort_by} ${order};
     `
     )
     .then((result) => {

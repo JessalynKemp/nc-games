@@ -66,6 +66,15 @@ describe("nc-games app", () => {
           expect(reviews).toBeSortedBy("votes", { descending: true });
         });
     });
+    it("200 OK: returns an array sorted by date in ascending order when the order query is asc", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ order: "asc" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("created_at");
+        });
+    });
   });
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {
