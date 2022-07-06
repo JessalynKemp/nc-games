@@ -135,6 +135,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("cannot sort by review_body");
         });
     });
+    it("400 Bad Request: responds with 'sort_by must be a string' when sort_by query is a number", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: 1 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("sort_by must be a string");
+        });
+    });
   });
 
   describe("GET /api/reviews/:review_id", () => {

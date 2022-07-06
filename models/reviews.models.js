@@ -4,9 +4,13 @@ const {
   notNumber,
   notProvided,
   cannotSort,
+  notString,
 } = require("../error-messages/errors");
 
 exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
+  if (!isNaN(+sort_by)) {
+    return notString("sort_by");
+  }
   const validSorts = [
     "review_id",
     "title",
