@@ -57,7 +57,131 @@ describe("nc-games app", () => {
           expect(reviews).toBeSortedBy("created_at", { descending: true });
         });
     });
+    it("200 OK: returns an array sorted by votes in descending order (default) when the sort_by query is votes", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "votes" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("votes", { descending: true });
+        });
+    });
+    it("200 OK: returns an array sorted by date in ascending order when the order query is asc", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ order: "asc" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("created_at");
+        });
+    });
+    it("200 OK: returns an array sorted by title in descending order when the order query is desc", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "title", order: "desc" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("title", { descending: true });
+        });
+    });
+    it("200 OK: filters reviews by social deduction when the category query is social deduction", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "social deduction" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toHaveLength(11);
+          reviews.forEach((review) => {
+            expect(review).toMatchObject({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: "social deduction",
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              comment_count: expect.any(Number),
+            });
+          });
+        });
+    });
+    it("200 OK: returns an empty array when the category exists but there are no reviews", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "children's games" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toEqual([]);
+        });
+    });
+    it("200 OK: all three queries work together", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "votes", order: "asc", category: "social deduction" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toHaveLength(11);
+          expect(reviews).toBeSortedBy("votes");
+        });
+    });
+    it("400 Bad Request: responds with 'cannot sort by review_body' when sort_by query is review_body", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "review_body" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("cannot sort by review_body");
+        });
+    });
+    it("400 Bad Request: responds with 'sort_by must be a string' when sort_by query is a number", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: 1 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("sort_by must be a string");
+        });
+    });
+    it("404 Not Found: responds with 'bananas not found' when sort_by query does not exist", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "bananas" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("bananas not found");
+        });
+    });
+    it("400 Bad Request: responds with 'order must be asc or desc' when order query is not asc or desc", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ order: "bananas" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("order must be asc or desc");
+        });
+    });
+    it("400 Bad Request: responds with 'category must be a string' when category query is a number", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: 1 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("category must be a string");
+        });
+    });
+    it("404 Not Found: responds with 'category not found' when category query does not exist", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "campaign" })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("category not found");
+        });
+    });
   });
+
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {
       return request(app)

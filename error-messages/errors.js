@@ -31,3 +31,7 @@ exports.notProvided = (...params) => {
     msg: `${errorStr} not provided`,
   });
 };
+
+exports.cannotSort = (param) => {
+  return Promise.reject({ status: 400, msg: `cannot sort by ${param}` });
+};
