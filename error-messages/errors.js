@@ -1,7 +1,14 @@
-exports.tooManyProps = () => {
+exports.tooManyPropsReviews = () => {
   return Promise.reject({
     status: 400,
     msg: "only updates to inc_votes are available",
+  });
+};
+
+exports.tooManyPropsComments = () => {
+  return Promise.reject({
+    status: 400,
+    msg: "only username and body are needed to post a comment",
   });
 };
 

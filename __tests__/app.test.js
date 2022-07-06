@@ -309,6 +309,22 @@ describe("nc-games app", () => {
           expect(msg).toBe("body must be a string");
         });
     });
+    it("400 Bad Request: responds with 'only username and body are needed to post a comment' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
+      const newComment = {
+        username: "dav3rid",
+        body: "Agricola is a detailed, strategic, and thoroughly engaging euro-style game about indirect competitive farming.",
+        votes: 1000,
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(newComment)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe(
+            "only username and body are needed to post a comment"
+          );
+        });
+    });
   });
   describe("GET /api/users", () => {
     it("200 OK: returns an array of user objects under the key of 'users'", () => {
