@@ -24,6 +24,9 @@ exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
   if (!isNaN(+sort_by)) {
     return notString("sort_by");
   }
+  if (!isNaN(+category)) {
+    return notString("category");
+  }
   if (!validSorts.includes(sort_by)) {
     if (!invalidSorts.includes(sort_by)) return notFound(sort_by);
     else return cannotSort(sort_by);

@@ -162,6 +162,15 @@ describe("nc-games app", () => {
           expect(msg).toBe("order must be asc or desc");
         });
     });
+    it("400 Bad Request: responds with 'category must be a string' when category query is a number", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: 1 })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("category must be a string");
+        });
+    });
   });
 
   describe("GET /api/reviews/:review_id", () => {
