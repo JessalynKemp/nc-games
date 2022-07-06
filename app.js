@@ -3,11 +3,13 @@ const { getCategories } = require("./controllers/categories.controllers");
 const {
   getReviews,
   getReview,
-  getReviewComments,
   updateReviewVotes,
-  postCommentOnReview,
 } = require("./controllers/reviews.controllers");
 const { getUsers } = require("./controllers/users.controllers");
+const {
+  getReviewComments,
+  postCommentOnReview,
+} = require("./controllers/comments.controllers");
 
 const app = express();
 app.use(express.json());

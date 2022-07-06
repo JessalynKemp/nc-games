@@ -1,17 +1,9 @@
 const {
   selectReviews,
   selectReview,
-  selectReviewComments,
   modifyReviewVotes,
-  addCommentOnReview,
 } = require("../models/reviews.models");
-
-function tooManyProps() {
-  return Promise.reject({
-    status: 400,
-    msg: "only updates to inc_votes are available",
-  });
-}
+const { tooManyProps } = require("../error-messages/errors");
 
 exports.getReviews = (req, res, next) => {
   selectReviews()
@@ -34,17 +26,6 @@ exports.getReview = (req, res, next) => {
     });
 };
 
-exports.getReviewComments = (req, res, next) => {
-  const { review_id } = req.params;
-  selectReviewComments(review_id)
-    .then((comments) => {
-      res.status(200).send({ comments });
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
 exports.updateReviewVotes = (req, res, next) => {
   const { review_id } = req.params;
   const { inc_votes } = req.body;
@@ -55,19 +36,6 @@ exports.updateReviewVotes = (req, res, next) => {
         return tooManyProps();
       }
       res.status(200).send({ review });
-    })
-    .catch((err) => {
-      next(err);
-    });
-};
-
-exports.postCommentOnReview = (req, res, next) => {
-  const { review_id } = req.params;
-  const { username, body } = req.body;
-
-  addCommentOnReview(review_id, username, body)
-    .then((comment) => {
-      res.status(201).send({ comment });
     })
     .catch((err) => {
       next(err);

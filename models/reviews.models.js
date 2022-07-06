@@ -1,27 +1,9 @@
 const db = require("../db/connection");
-
-function idNotFound() {
-  return Promise.reject({ status: 404, msg: "review_id not found" });
-}
-
-function idNotNumber() {
-  return Promise.reject({ status: 400, msg: "review_id must be a number" });
-}
-
-function incVotesNotNumber() {
-  return Promise.reject({ status: 400, msg: "inc_votes must be a number" });
-}
-
-function checkReviewIDExists(review_id) {
-  if (!review_id) return;
-  return db
-    .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
-    .then(({ rowCount }) => {
-      if (rowCount === 0) {
-        return idNotFound();
-      }
-    });
-}
+const {
+  idNotFound,
+  idNotNumber,
+  incVotesNotNumber,
+} = require("../error-messages/errors");
 
 exports.selectReviews = () => {
   return db
@@ -63,25 +45,6 @@ exports.selectReview = (review_id) => {
     });
 };
 
-exports.selectReviewComments = (review_id) => {
-  if (isNaN(+review_id)) {
-    return idNotNumber();
-  }
-  return Promise.all([
-    db.query(
-      `
-  SELECT * FROM comments
-  WHERE review_id = $1
-  `,
-      [review_id]
-    ),
-    checkReviewIDExists(review_id),
-  ]).then(([result]) => {
-    const comments = result.rows;
-    return comments;
-  });
-};
-
 exports.modifyReviewVotes = (review_id, inc_votes) => {
   if (inc_votes === undefined) {
     return Promise.reject({ status: 400, msg: "inc_votes not provided" });
@@ -99,21 +62,5 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
       if (!review) {
         return idNotFound();
       } else return review;
-    });
-};
-
-exports.addCommentOnReview = (review_id, username, body) => {
-  return db
-    .query(
-      `
-  INSERT INTO comments (body, review_id, author, votes)
-  VALUES ($1, $2, $3, $4)
-  RETURNING *;
-  `,
-      [body, review_id, username, 0]
-    )
-    .then((result) => {
-      const comment = result.rows[0];
-      return comment;
     });
 };
