@@ -116,6 +116,16 @@ describe("nc-games app", () => {
           expect(reviews).toEqual([]);
         });
     });
+    it("200 OK: all three queries work together", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ sort_by: "votes", order: "asc", category: "social deduction" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toHaveLength(11);
+          expect(reviews).toBeSortedBy("votes");
+        });
+    });
   });
 
   describe("GET /api/reviews/:review_id", () => {
