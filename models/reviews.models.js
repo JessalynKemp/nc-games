@@ -5,21 +5,25 @@ const {
   notProvided,
 } = require("../error-messages/errors");
 
-exports.selectReviews = (sort_by = "created_at", order = "desc") => {
-  return db
-    .query(
-      `
-    SELECT reviews.*, COUNT(comments.comment_id)::int AS comment_count 
-    FROM reviews
-    LEFT JOIN comments ON comments.review_id = reviews.review_id
+exports.selectReviews = (sort_by = "created_at", order = "desc", category) => {
+  let queryStr = `
+  SELECT reviews.*, COUNT(comments.comment_id)::int AS comment_count 
+  FROM reviews
+  LEFT JOIN comments ON comments.review_id = reviews.review_id 
+  `;
+  const queryValues = [];
+  if (category) {
+    queryStr += `WHERE category = $1`;
+    queryValues.push(category);
+  }
+  queryStr += `  
     GROUP BY reviews.review_id
-    ORDER BY ${sort_by} ${order};
-    `
-    )
-    .then((result) => {
-      const reviews = result.rows;
-      return reviews;
-    });
+    ORDER BY ${sort_by} ${order}
+   `;
+  return db.query(queryStr, queryValues).then((result) => {
+    const reviews = result.rows;
+    return reviews;
+  });
 };
 
 exports.selectReview = (review_id) => {

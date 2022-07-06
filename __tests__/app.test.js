@@ -84,6 +84,29 @@ describe("nc-games app", () => {
           expect(reviews).toBeSortedBy("title", { descending: true });
         });
     });
+    it("200 OK: filters reviews by social deduction when the category query is social deduction", () => {
+      return request(app)
+        .get("/api/reviews")
+        .query({ category: "social deduction" })
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toHaveLength(11);
+          reviews.forEach((review) => {
+            expect(review).toMatchObject({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: "social deduction",
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              comment_count: expect.any(Number),
+            });
+          });
+        });
+    });
   });
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {
