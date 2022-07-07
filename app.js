@@ -1,10 +1,5 @@
 const express = require("express");
 
-const {
-  getReviews,
-  getReview,
-  updateReviewVotes,
-} = require("./controllers/reviews.controllers");
 const { getUsers } = require("./controllers/users.controllers");
 const {
   getReviewComments,
@@ -13,6 +8,7 @@ const {
 } = require("./controllers/comments.controllers");
 const apiRouter = require("./routes/api-router");
 const categoriesRouter = require("./routes/categories-router");
+const reviewsRouter = require("./routes/reviews-router");
 
 const app = express();
 app.use(express.json());
@@ -24,11 +20,7 @@ app.use("/api", apiRouter);
 apiRouter.use("/categories", categoriesRouter);
 
 // Reviews
-// -- GET
-app.get("/api/reviews", getReviews);
-app.get("/api/reviews/:review_id", getReview);
-// -- PATCH
-app.patch("/api/reviews/:review_id", updateReviewVotes);
+apiRouter.use("/reviews", reviewsRouter);
 
 // Users
 app.get("/api/users", getUsers);
