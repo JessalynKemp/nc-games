@@ -522,7 +522,7 @@ describe("nc-games app", () => {
           expect(body.endpoints).toHaveProperty("GET /api/categories");
           expect(body.endpoints).toHaveProperty("GET /api/reviews");
           expect(body.endpoints).toHaveProperty("GET /api/users");
-          // expect(body.endpoints).toHaveProperty("GET /api/reviews/:review_id");
+          expect(body.endpoints).toHaveProperty("GET /api/reviews/:review_id");
           // expect(body.endpoints).toHaveProperty(
           //   "GET /api/reviews/:review_id/comments"
           // );
