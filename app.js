@@ -1,6 +1,5 @@
 const express = require("express");
 
-const { getUsers } = require("./controllers/users.controllers");
 const {
   getReviewComments,
   postCommentOnReview,
@@ -9,6 +8,7 @@ const {
 const apiRouter = require("./routes/api-router");
 const categoriesRouter = require("./routes/categories-router");
 const reviewsRouter = require("./routes/reviews-router");
+const usersRouter = require("./routes/users-router");
 
 const app = express();
 app.use(express.json());
@@ -23,7 +23,7 @@ apiRouter.use("/categories", categoriesRouter);
 apiRouter.use("/reviews", reviewsRouter);
 
 // Users
-app.get("/api/users", getUsers);
+apiRouter.use("/users", usersRouter);
 
 // Comments
 // -- GET
