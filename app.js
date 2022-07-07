@@ -4,6 +4,7 @@ const apiRouter = require("./routes/api-router");
 const categoriesRouter = require("./routes/categories-router");
 const reviewsRouter = require("./routes/reviews-router");
 const usersRouter = require("./routes/users-router");
+const commentsRouter = require("./routes/comments-router");
 
 const app = express();
 app.use(express.json());
@@ -21,11 +22,7 @@ apiRouter.use("/reviews", reviewsRouter);
 apiRouter.use("/users", usersRouter);
 
 // Comments
-// -- GET
-// app.get("/api/reviews/:review_id/comments", getReviewComments);
-// -- POST
-// app.post("/api/reviews/:review_id/comments", postCommentOnReview);
-// -- DELETE
+apiRouter.use("/comments", commentsRouter);
 // app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use("*", (req, res) => {
