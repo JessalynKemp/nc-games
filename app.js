@@ -1,44 +1,29 @@
 const express = require("express");
-const { getCategories } = require("./controllers/categories.controllers");
-const {
-  getReviews,
-  getReview,
-  updateReviewVotes,
-} = require("./controllers/reviews.controllers");
-const { getUsers } = require("./controllers/users.controllers");
-const {
-  getReviewComments,
-  postCommentOnReview,
-  deleteComment,
-} = require("./controllers/comments.controllers");
-const { getEndpoints } = require("./controllers/api.controllers.js");
+
+const apiRouter = require("./routes/api-router");
+const categoriesRouter = require("./routes/categories-router");
+const reviewsRouter = require("./routes/reviews-router");
+const usersRouter = require("./routes/users-router");
+const commentsRouter = require("./routes/comments-router");
 
 const app = express();
 app.use(express.json());
 
 // API
-app.get("/api", getEndpoints);
+app.use("/api", apiRouter);
 
 // Categories
-app.get("/api/categories", getCategories);
+apiRouter.use("/categories", categoriesRouter);
 
 // Reviews
-// -- GET
-app.get("/api/reviews", getReviews);
-app.get("/api/reviews/:review_id", getReview);
-// -- PATCH
-app.patch("/api/reviews/:review_id", updateReviewVotes);
+apiRouter.use("/reviews", reviewsRouter);
 
 // Users
-app.get("/api/users", getUsers);
+apiRouter.use("/users", usersRouter);
 
 // Comments
-// -- GET
-app.get("/api/reviews/:review_id/comments", getReviewComments);
-// -- POST
-app.post("/api/reviews/:review_id/comments", postCommentOnReview);
-// -- DELETE
-app.delete("/api/comments/:comment_id", deleteComment);
+apiRouter.use("/comments", commentsRouter);
+// app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use("*", (req, res) => {
   res.status(404).send({ msg: "Invalid Path" });
