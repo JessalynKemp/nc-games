@@ -532,9 +532,9 @@ describe("nc-games app", () => {
           expect(body.endpoints).toHaveProperty(
             "POST /api/reviews/:review_id/comments"
           );
-          // expect(body.endpoints).toHaveProperty(
-          //   "DELETE /api/comments/:comment_id"
-          // );
+          expect(body.endpoints).toHaveProperty(
+            "DELETE /api/comments/:comment_id"
+          );
         });
     });
   });
