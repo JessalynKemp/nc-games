@@ -523,15 +523,15 @@ describe("nc-games app", () => {
           expect(body.endpoints).toHaveProperty("GET /api/reviews");
           expect(body.endpoints).toHaveProperty("GET /api/users");
           expect(body.endpoints).toHaveProperty("GET /api/reviews/:review_id");
-          // expect(body.endpoints).toHaveProperty(
-          //   "GET /api/reviews/:review_id/comments"
-          // );
-          // expect(body.endpoints).toHaveProperty(
-          //   "PATCH /api/reviews/:review_id"
-          // );
-          // expect(body.endpoints).toHaveProperty(
-          //   "POST /api/reviews/:review_id/comments"
-          // );
+          expect(body.endpoints).toHaveProperty(
+            "GET /api/reviews/:review_id/comments"
+          );
+          expect(body.endpoints).toHaveProperty(
+            "PATCH /api/reviews/:review_id"
+          );
+          expect(body.endpoints).toHaveProperty(
+            "POST /api/reviews/:review_id/comments"
+          );
           // expect(body.endpoints).toHaveProperty(
           //   "DELETE /api/comments/:comment_id"
           // );

@@ -99,5 +99,23 @@
                 "comment_count": 4
             }
         }
+      },
+      "POST /api/reviews/:review_id/comments": {
+        "description": "adds a new comment to the review with the given review_id and serves an object containing the comment",
+        "queries": [],
+        "requestBodyExample": {
+            "username" : "your_username", 
+            "body": "your_comment_here"
+        },
+        "exampleResponse": {
+            "comment": {
+                    "comment_id": 56,
+                    "body": "your_comment_here",
+                    "review_id": 2,
+                    "author": "your_username",
+                    "votes": 14,
+                    "created_at": "2021-03-27T14:15:51.110Z"
+                }
+        }
       }
   }
