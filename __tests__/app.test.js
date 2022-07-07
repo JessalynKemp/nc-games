@@ -511,6 +511,33 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("GET /api", () => {
+    it("200 OK: returns a json object containing all endpoints as keys with a description of what they do", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toHaveProperty("endpoints");
+          expect(body.endpoints).toHaveProperty("GET /api");
+          expect(body.endpoints).toHaveProperty("GET /api/categories");
+          expect(body.endpoints).toHaveProperty("GET /api/reviews");
+          expect(body.endpoints).toHaveProperty("GET /api/users");
+          expect(body.endpoints).toHaveProperty("GET /api/reviews/:review_id");
+          expect(body.endpoints).toHaveProperty(
+            "GET /api/reviews/:review_id/comments"
+          );
+          expect(body.endpoints).toHaveProperty(
+            "PATCH /api/reviews/:review_id"
+          );
+          expect(body.endpoints).toHaveProperty(
+            "POST /api/reviews/:review_id/comments"
+          );
+          expect(body.endpoints).toHaveProperty(
+            "DELETE /api/comments/:comment_id"
+          );
+        });
+    });
+  });
   describe("Bad paths", () => {
     it("404 Not Found: invalid paths responds with 'Invalid Path'", () => {
       return request(app)

@@ -1,0 +1,118 @@
+{
+    "GET /api": {
+      "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "GET /api/categories": {
+      "description": "serves an array of all categories",
+      "exampleResponse": {
+        "categories": [
+            {
+                "slug": "strategy",
+                "description": "Strategy-focused board games that prioritise limited-randomness"
+            }
+        ]
+      }
+    },
+    "GET /api/reviews": {
+      "description": "serves an array of all reviews sorted by date from newest to oldest",
+      "queries": ["category", "sort_by", "order"],
+      "exampleResponse": {
+        "reviews": [
+            {
+                "review_id": 16,
+                "title": "Ticket To Ride",
+                "category": "deck-building",
+                "designer": "Alan R. Moon",
+                "owner": "weegembump",
+                "review_body": "Choo-chooing onto game tables and zooming its way to becoming a modern classic. Ticket To Ride is rich with trains, tickets and tactics. Players gather train cards to enable then to build routes across a North American map, joining big cities and trying not to get blocked by their opponent ",
+                "review_img_url": "https://images.pexels.com/photos/4691567/pexels-photo-4691567.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                "created_at": "2021-01-22T11:05:05.936Z",
+                "votes": 1,
+                "comment_count": 7
+            }
+        ]
+      }
+    },
+    "GET /api/users": {
+        "description": "serves an array of all users",
+        "exampleResponse": {
+          "users": [
+            {
+                "username": "grumpy19",
+                "name": "Paul Grump",
+                "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/78/Mr-Grumpy-3A.PNG/revision/latest?cb=20170707233013"
+            }
+          ]
+        }
+      },
+      "GET /api/reviews/:review_id": {
+        "description": "serves an object for the given review_id",
+        "exampleResponse": {
+            "review": {
+                "review_id": 4,
+                "title": "One Night Ultimate Werewolf",
+                "category": "hidden-roles",
+                "designer": "Akihisa Okui",
+                "owner": "happyamy2016",
+                "review_body": "We couldn't find the werewolf!",
+                "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                "created_at": "2021-01-18T10:01:41.251Z",
+                "votes": 5,
+                "comment_count": 4
+            }
+        }
+      },
+      "GET /api/reviews/:review_id/comments": {
+        "description": "serves an array of all comments for a given review_id",
+        "exampleResponse": {
+            "comments": [
+                {
+                    "comment_id": 12,
+                    "body": "Aliquip aliqua ad fugiat anim ex elit consectetur ut fugiat ex qui.",
+                    "review_id": 5,
+                    "author": "tickle122",
+                    "votes": 8,
+                    "created_at": "2021-03-27T14:15:51.110Z"
+                }
+            ]
+        }
+      },
+      "PATCH /api/reviews/:review_id": {
+        "description": "increments or decrements the votes (negative value = decrement) for a given review_id and serves the updated object",
+        "requestBodyExample": {"inc_votes" : 1},
+        "exampleResponse": {
+            "review": {
+                "review_id": 4,
+                "title": "One Night Ultimate Werewolf",
+                "category": "hidden-roles",
+                "designer": "Akihisa Okui",
+                "owner": "happyamy2016",
+                "review_body": "We couldn't find the werewolf!",
+                "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+                "created_at": "2021-01-18T10:01:41.251Z",
+                "votes": 6,
+                "comment_count": 4
+            }
+        }
+      },
+      "POST /api/reviews/:review_id/comments": {
+        "description": "adds a new comment to the review with the given review_id and serves an object containing the comment",
+        "requestBodyExample": {
+            "username" : "existing_username", 
+            "body": "your_comment_here"
+        },
+        "exampleResponse": {
+            "comment": {
+                    "comment_id": 56,
+                    "body": "your_comment_here",
+                    "review_id": 2,
+                    "author": "existing_username",
+                    "votes": 14,
+                    "created_at": "2021-03-27T14:15:51.110Z"
+                }
+        }
+      },
+      "DELETE /api/comments/:comment_id": {
+        "description": "deletes the comment with the given comment_id and responds with status 204"
+      }
+  }

@@ -11,9 +11,13 @@ const {
   postCommentOnReview,
   deleteComment,
 } = require("./controllers/comments.controllers");
+const { getEndpoints } = require("./controllers/api.controllers.js");
 
 const app = express();
 app.use(express.json());
+
+// API
+app.get("/api", getEndpoints);
 
 // Categories
 app.get("/api/categories", getCategories);
