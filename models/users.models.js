@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { notString } = require("../error-messages/errors");
 
 exports.selectUsers = () => {
   return db.query("SELECT * FROM users;").then((result) => {
@@ -8,6 +9,9 @@ exports.selectUsers = () => {
 };
 
 exports.selectUser = (username) => {
+  if (!isNaN(+username)) {
+    return notString("username");
+  }
   return db
     .query("SELECT * FROM users WHERE username = $1", [username])
     .then((result) => {

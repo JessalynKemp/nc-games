@@ -498,6 +498,14 @@ describe("nc-games app", () => {
           );
         });
     });
+    it("400 Bad Request: responds with 'username must be a string' when passed a username of the wrong type", () => {
+      return request(app)
+        .get("/api/users/4")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username must be a string");
+        });
+    });
   });
   describe("DELETE /api/comments/:comment_id", () => {
     it("204 No Content: deletes the comment with the given comment_id", () => {
