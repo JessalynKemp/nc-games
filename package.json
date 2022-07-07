@@ -10,7 +10,8 @@
     "test": "jest",
     "prepare": "husky install",
     "test-sql": "psql -f ./db/data/test-data/test.sql > ./db/data/test-data/test-output.txt",
-    "dev": "nodemon listen.js"
+    "dev": "nodemon listen.js",
+    "start": "node listen.js"
   },
   "repository": {
     "type": "git",
