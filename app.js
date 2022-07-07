@@ -1,10 +1,5 @@
 const express = require("express");
 
-const {
-  getReviewComments,
-  postCommentOnReview,
-  deleteComment,
-} = require("./controllers/comments.controllers");
 const apiRouter = require("./routes/api-router");
 const categoriesRouter = require("./routes/categories-router");
 const reviewsRouter = require("./routes/reviews-router");
@@ -27,11 +22,11 @@ apiRouter.use("/users", usersRouter);
 
 // Comments
 // -- GET
-app.get("/api/reviews/:review_id/comments", getReviewComments);
+// app.get("/api/reviews/:review_id/comments", getReviewComments);
 // -- POST
-app.post("/api/reviews/:review_id/comments", postCommentOnReview);
+// app.post("/api/reviews/:review_id/comments", postCommentOnReview);
 // -- DELETE
-app.delete("/api/comments/:comment_id", deleteComment);
+// app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use("*", (req, res) => {
   res.status(404).send({ msg: "Invalid Path" });
