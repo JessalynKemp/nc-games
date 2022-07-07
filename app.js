@@ -1,5 +1,5 @@
 const express = require("express");
-const { getCategories } = require("./controllers/categories.controllers");
+
 const {
   getReviews,
   getReview,
@@ -12,6 +12,7 @@ const {
   deleteComment,
 } = require("./controllers/comments.controllers");
 const apiRouter = require("./routes/api-router");
+const categoriesRouter = require("./routes/categories-router");
 
 const app = express();
 app.use(express.json());
@@ -20,7 +21,7 @@ app.use(express.json());
 app.use("/api", apiRouter);
 
 // Categories
-app.get("/api/categories", getCategories);
+apiRouter.use("/categories", categoriesRouter);
 
 // Reviews
 // -- GET
