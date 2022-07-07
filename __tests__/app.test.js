@@ -483,6 +483,22 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("GET /api/users/:username", () => {
+    it("200 OK: returns a user object for the username given", () => {
+      return request(app)
+        .get("/api/users/philippaclaire9")
+        .expect(200)
+        .then(({ body: { user } }) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: "philippaclaire9",
+              avatar_url: expect.any(String),
+              name: expect.any(String),
+            })
+          );
+        });
+    });
+  });
   describe("DELETE /api/comments/:comment_id", () => {
     it("204 No Content: deletes the comment with the given comment_id", () => {
       return request(app).delete("/api/comments/2").expect(204);

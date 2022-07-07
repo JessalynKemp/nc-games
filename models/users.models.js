@@ -6,3 +6,12 @@ exports.selectUsers = () => {
     return users;
   });
 };
+
+exports.selectUser = (username) => {
+  return db
+    .query("SELECT * FROM users WHERE username = $1", [username])
+    .then((result) => {
+      const user = result.rows[0];
+      return user;
+    });
+};
