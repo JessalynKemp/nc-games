@@ -181,7 +181,36 @@ describe("nc-games app", () => {
         });
     });
   });
-
+  describe("POST /api/reviews", () => {
+    it("201 created: returns the new review object that has been added to the reviews table ", () => {
+      const newReview = {
+        owner: "dav3rid",
+        title: "Codenames is a great party game!",
+        review_body:
+          "Codenames quickly gets extremely competitive. Players need to be clever with the clues they provide!",
+        designer: "Vladimír Chvátil",
+        category: "social deduction",
+      };
+      return request(app)
+        .post("/api/reviews")
+        .send(newReview)
+        .expect(201)
+        .then(({ body: { review } }) => {
+          expect(review).toMatchObject({
+            review_id: 14,
+            owner: "dav3rid",
+            title: "Codenames is a great party game!",
+            review_body:
+              "Codenames quickly gets extremely competitive. Players need to be clever with the clues they provide!",
+            designer: "Vladimír Chvátil",
+            category: "social deduction",
+            votes: 0,
+            created_at: expect.any(String),
+            comment_count: 0,
+          });
+        });
+    });
+  });
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {
       return request(app)

@@ -2,6 +2,7 @@ const {
   selectReviews,
   selectReview,
   modifyReviewVotes,
+  addReview,
 } = require("../models/reviews.models");
 const { tooManyProps } = require("../error-messages/errors");
 
@@ -37,6 +38,17 @@ exports.updateReviewVotes = (req, res, next) => {
         return tooManyProps(req.body, "inc_votes");
       }
       res.status(200).send({ review });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postReview = (req, res, next) => {
+  const { owner, title, review_body, designer, category } = req.body;
+  addReview(owner, title, review_body, designer, category)
+    .then((review) => {
+      res.status(201).send({ review });
     })
     .catch((err) => {
       next(err);

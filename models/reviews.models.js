@@ -110,3 +110,20 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
       } else return review;
     });
 };
+
+exports.addReview = (owner, title, review_body, designer, category) => {
+  return db
+    .query(
+      `
+  INSERT INTO reviews (title, category, designer, owner, review_body, votes)
+  VALUES ($1, $2, $3, $4, $5, $6)
+  RETURNING *;
+  `,
+      [title, category, designer, owner, review_body, 0]
+    )
+    .then((result) => {
+      const review = result.rows[0];
+      review.comment_count = 0;
+      return review;
+    });
+};
