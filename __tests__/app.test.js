@@ -506,6 +506,14 @@ describe("nc-games app", () => {
           expect(msg).toBe("username must be a string");
         });
     });
+    it("404 Not Found: responds with 'username not found' when passed a username that does not exist", () => {
+      return request(app)
+        .get("/api/users/bananac4t")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username not found");
+        });
+    });
   });
   describe("DELETE /api/comments/:comment_id", () => {
     it("204 No Content: deletes the comment with the given comment_id", () => {

@@ -1,5 +1,5 @@
 const db = require("../db/connection");
-const { notString } = require("../error-messages/errors");
+const { notString, notFound } = require("../error-messages/errors");
 
 exports.selectUsers = () => {
   return db.query("SELECT * FROM users;").then((result) => {
@@ -16,6 +16,8 @@ exports.selectUser = (username) => {
     .query("SELECT * FROM users WHERE username = $1", [username])
     .then((result) => {
       const user = result.rows[0];
-      return user;
+      if (!user) {
+        return notFound("username");
+      } else return user;
     });
 };
