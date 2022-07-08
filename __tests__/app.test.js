@@ -297,7 +297,7 @@ describe("nc-games app", () => {
           expect(msg).toBe("inc_votes must be a number");
         });
     });
-    it("400 Bad Request: responds with 'only updates to inc_votes are available' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
+    it("400 Bad Request: responds with 'only inc_votes is required' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
       return request(app)
         .patch("/api/reviews/1")
         .send({ inc_votes: 1, name: "Mitch" })
@@ -573,6 +573,15 @@ describe("nc-games app", () => {
         .expect(400)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("inc_votes must be a number");
+        });
+    });
+    it("400 Bad Request: responds with 'only inc_votes is required' when passed '{inc_votes: 1, author: 'bananac4t'}'", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: 1, author: "bananac4t" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("only inc_votes is required");
         });
     });
   });

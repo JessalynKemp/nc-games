@@ -48,6 +48,9 @@ exports.updateCommentVotes = (req, res, next) => {
   const { inc_votes } = req.body;
   modifyCommentVotes(comment_id, inc_votes)
     .then((comment) => {
+      if (Object.keys(req.body).length > 1) {
+        return tooManyProps(req.body, "inc_votes");
+      }
       res.status(200).send({ comment });
     })
     .catch((err) => {
