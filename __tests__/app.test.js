@@ -226,6 +226,19 @@ describe("nc-games app", () => {
           expect(msg).toBe("title not provided");
         });
     });
+    it("400 Bad Request: responds with 'owner, title and review_body not provided' when passed a request body with no title, owner or review_body", () => {
+      const newReview = {
+        designer: "Vladimír Chvátil",
+        category: "social deduction",
+      };
+      return request(app)
+        .post("/api/reviews")
+        .send(newReview)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("owner, title and review_body not provided");
+        });
+    });
   });
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {

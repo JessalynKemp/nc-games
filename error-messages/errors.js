@@ -22,21 +22,22 @@ exports.missingProps = (requestBody, ...props) => {
       missingProps.push(props[i]);
     }
   }
+
   if (missingProps.length === 0) {
     return;
   }
 
   if (missingProps.length > 2) {
-    extraProp = missingProps.pop();
+    lastProp = missingProps.pop();
   }
 
-  missingProps.length > 2
-    ? (errorStr = missingProps.join(", ") + `and $extraProp`)
-    : (errorStr = missingProps.join(" and "));
+  lastProp !== ""
+    ? (errStr = missingProps.join(", ") + ` and ${lastProp}`)
+    : (errStr = missingProps.join(" and "));
 
   return Promise.reject({
     status: 400,
-    msg: `${errorStr} not provided`,
+    msg: `${errStr} not provided`,
   });
 };
 
