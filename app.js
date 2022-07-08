@@ -23,7 +23,6 @@ apiRouter.use("/users", usersRouter);
 
 // Comments
 apiRouter.use("/comments", commentsRouter);
-// app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use("*", (req, res) => {
   res.status(404).send({ msg: "Invalid Path" });

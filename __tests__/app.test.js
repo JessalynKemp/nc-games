@@ -515,6 +515,24 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("PATCH /api/comments/:comment_id", () => {
+    it("200 OK: returns the updated review with +2 votes when { inc_votes : 2 } is received (increase)", () => {
+      return request(app)
+        .patch("/api/comments/6")
+        .send({ inc_votes: 2 })
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toEqual({
+            comment_id: 6,
+            body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+            votes: 12,
+            author: "philippaclaire9",
+            review_id: 3,
+            created_at: "2021-03-27T19:49:48.110Z",
+          });
+        });
+    });
+  });
   describe("DELETE /api/comments/:comment_id", () => {
     it("204 No Content: deletes the comment with the given comment_id", () => {
       return request(app).delete("/api/comments/2").expect(204);

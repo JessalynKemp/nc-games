@@ -2,6 +2,7 @@ const {
   selectReviewComments,
   addCommentOnReview,
   removeComment,
+  modifyCommentVotes,
 } = require("../models/comments.models");
 const { tooManyProps } = require("../error-messages/errors");
 
@@ -36,6 +37,18 @@ exports.deleteComment = (req, res, next) => {
   removeComment(comment_id)
     .then((deletedComment) => {
       res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.updateCommentVotes = (req, res, next) => {
+  const { comment_id } = req.params;
+  const { inc_votes } = req.body;
+  modifyCommentVotes(comment_id, inc_votes)
+    .then((comment) => {
+      res.status(200).send({ comment });
     })
     .catch((err) => {
       next(err);
