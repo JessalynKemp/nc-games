@@ -3,7 +3,7 @@ const {
   notNumber,
   notFound,
   notString,
-  notProvided,
+  missingProps,
 } = require("../error-messages/errors");
 
 function checkReviewIDExists(review_id) {
@@ -47,16 +47,12 @@ exports.selectReviewComments = (review_id) => {
   });
 };
 
-exports.addCommentOnReview = (review_id, username, body) => {
+exports.addCommentOnReview = (requestBody, review_id, username, body) => {
   if (isNaN(+review_id)) {
     return notNumber("review_id");
   }
-  if (username === undefined && body === undefined) {
-    return notProvided("username", "body");
-  } else if (username === undefined) {
-    return notProvided("username");
-  } else if (body === undefined) {
-    return notProvided("body");
+  if (!username || !body) {
+    return missingProps(requestBody, "username", "body");
   }
   if (typeof body !== "string") {
     return notString("body");
@@ -98,9 +94,9 @@ exports.removeComment = (comment_id) => {
     });
 };
 
-exports.modifyCommentVotes = (comment_id, inc_votes) => {
-  if (inc_votes === undefined) {
-    return notProvided("inc_votes");
+exports.modifyCommentVotes = (requestBody, comment_id, inc_votes) => {
+  if (!inc_votes) {
+    return missingProps(requestBody, "inc_votes");
   }
   if (isNaN(+inc_votes)) {
     return notNumber("inc_votes");

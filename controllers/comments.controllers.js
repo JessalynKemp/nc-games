@@ -20,7 +20,8 @@ exports.getReviewComments = (req, res, next) => {
 exports.postCommentOnReview = (req, res, next) => {
   const { review_id } = req.params;
   const { username, body } = req.body;
-  addCommentOnReview(review_id, username, body)
+  const requestBody = req.body;
+  addCommentOnReview(requestBody, review_id, username, body)
     .then((comment) => {
       if (Object.keys(req.body).length > 2) {
         return tooManyProps(req.body, "username", "body");
@@ -46,7 +47,8 @@ exports.deleteComment = (req, res, next) => {
 exports.updateCommentVotes = (req, res, next) => {
   const { comment_id } = req.params;
   const { inc_votes } = req.body;
-  modifyCommentVotes(comment_id, inc_votes)
+  const requestBody = req.body;
+  modifyCommentVotes(requestBody, comment_id, inc_votes)
     .then((comment) => {
       if (Object.keys(req.body).length > 1) {
         return tooManyProps(req.body, "inc_votes");

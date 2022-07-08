@@ -2,7 +2,6 @@ const db = require("../db/connection");
 const {
   notFound,
   notNumber,
-  notProvided,
   cannotSort,
   notString,
   missingProps,
@@ -92,9 +91,9 @@ exports.selectReview = (review_id) => {
     });
 };
 
-exports.modifyReviewVotes = (review_id, inc_votes) => {
-  if (inc_votes === undefined) {
-    return notProvided("inc_votes");
+exports.modifyReviewVotes = (requestBody, review_id, inc_votes) => {
+  if (!inc_votes) {
+    return missingProps(requestBody, "inc_votes");
   }
   if (isNaN(+inc_votes)) {
     return notNumber("inc_votes");
@@ -113,7 +112,7 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
 };
 
 exports.addReview = (
-  request,
+  requestBody,
   owner,
   title,
   review_body,
@@ -122,7 +121,7 @@ exports.addReview = (
 ) => {
   if (!owner || !title || !review_body || !designer || !category) {
     return missingProps(
-      request,
+      requestBody,
       "owner",
       "title",
       "review_body",

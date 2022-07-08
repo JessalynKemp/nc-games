@@ -52,14 +52,6 @@ exports.notString = (param) => {
   return Promise.reject({ status: 400, msg: `${param} must be a string` });
 };
 
-exports.notProvided = (...params) => {
-  const errorStr = params.join(" and ");
-  return Promise.reject({
-    status: 400,
-    msg: `${errorStr} not provided`,
-  });
-};
-
 exports.cannotSort = (param) => {
   return Promise.reject({ status: 400, msg: `cannot sort by ${param}` });
 };
