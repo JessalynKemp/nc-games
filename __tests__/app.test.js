@@ -483,6 +483,38 @@ describe("nc-games app", () => {
         });
     });
   });
+  describe("GET /api/users/:username", () => {
+    it("200 OK: returns a user object for the username given", () => {
+      return request(app)
+        .get("/api/users/philippaclaire9")
+        .expect(200)
+        .then(({ body: { user } }) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: "philippaclaire9",
+              avatar_url: expect.any(String),
+              name: expect.any(String),
+            })
+          );
+        });
+    });
+    it("400 Bad Request: responds with 'username must be a string' when passed a username of the wrong type", () => {
+      return request(app)
+        .get("/api/users/4")
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username must be a string");
+        });
+    });
+    it("404 Not Found: responds with 'username not found' when passed a username that does not exist", () => {
+      return request(app)
+        .get("/api/users/bananac4t")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("username not found");
+        });
+    });
+  });
   describe("DELETE /api/comments/:comment_id", () => {
     it("204 No Content: deletes the comment with the given comment_id", () => {
       return request(app).delete("/api/comments/2").expect(204);
