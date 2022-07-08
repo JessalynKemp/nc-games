@@ -5,6 +5,7 @@ const {
   notProvided,
   cannotSort,
   notString,
+  missingProps,
 } = require("../error-messages/errors");
 
 function checkCategoryExists(category) {
@@ -111,7 +112,24 @@ exports.modifyReviewVotes = (review_id, inc_votes) => {
     });
 };
 
-exports.addReview = (owner, title, review_body, designer, category) => {
+exports.addReview = (
+  request,
+  owner,
+  title,
+  review_body,
+  designer,
+  category
+) => {
+  if (!owner || !title || !review_body || !designer || !category) {
+    return missingProps(
+      request,
+      "owner",
+      "title",
+      "review_body",
+      "designer",
+      "category"
+    );
+  }
   return db
     .query(
       `

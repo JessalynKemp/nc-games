@@ -210,6 +210,22 @@ describe("nc-games app", () => {
           });
         });
     });
+    it("400 Bad Request: responds with 'title not provided' when passed a request body with no title", () => {
+      const newReview = {
+        owner: "dav3rid",
+        review_body:
+          "Codenames quickly gets extremely competitive. Players need to be clever with the clues they provide!",
+        designer: "Vladimír Chvátil",
+        category: "social deduction",
+      };
+      return request(app)
+        .post("/api/reviews")
+        .send(newReview)
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("title not provided");
+        });
+    });
   });
   describe("GET /api/reviews/:review_id", () => {
     it("200 OK: returns a review object", () => {

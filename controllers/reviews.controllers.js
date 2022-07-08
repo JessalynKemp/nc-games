@@ -46,7 +46,8 @@ exports.updateReviewVotes = (req, res, next) => {
 
 exports.postReview = (req, res, next) => {
   const { owner, title, review_body, designer, category } = req.body;
-  addReview(owner, title, review_body, designer, category)
+  const request = req.body;
+  addReview(request, owner, title, review_body, designer, category)
     .then((review) => {
       res.status(201).send({ review });
     })
