@@ -551,9 +551,19 @@ describe("nc-games app", () => {
     it("404 Not Found: responds with 'comment_id not found' when passed a comment_id that does not exist", () => {
       return request(app)
         .patch("/api/comments/9999")
+        .send({ inc_votes: 1 })
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("comment_id not found");
+        });
+    });
+    it("400 Bad Request: responds with 'inc_votes not provided' when passed an empty request body", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("inc_votes not provided");
         });
     });
   });
