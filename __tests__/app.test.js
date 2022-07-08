@@ -297,7 +297,7 @@ describe("nc-games app", () => {
           expect(msg).toBe("inc_votes must be a number");
         });
     });
-    it("400 Bad Request: responds with 'only updates to inc_votes are available' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
+    it("400 Bad Request: responds with 'only inc_votes is required' when passed '{inc_votes: 1, name: 'Mitch'}'", () => {
       return request(app)
         .patch("/api/reviews/1")
         .send({ inc_votes: 1, name: "Mitch" })
@@ -512,6 +512,76 @@ describe("nc-games app", () => {
         .expect(404)
         .then(({ body: { msg } }) => {
           expect(msg).toBe("username not found");
+        });
+    });
+  });
+  describe("PATCH /api/comments/:comment_id", () => {
+    it("200 OK: returns the updated comment with +2 votes when { inc_votes : 2 } is received (increase)", () => {
+      return request(app)
+        .patch("/api/comments/6")
+        .send({ inc_votes: 2 })
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toEqual({
+            comment_id: 6,
+            body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+            votes: 12,
+            author: "philippaclaire9",
+            review_id: 3,
+            created_at: "2021-03-27T19:49:48.110Z",
+          });
+        });
+    });
+    it("200 OK: returns the updated comment with -10 votes when { inc_votes : -10 } is received (decrease)", () => {
+      return request(app)
+        .patch("/api/comments/6")
+        .send({ inc_votes: -10 })
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toEqual({
+            comment_id: 6,
+            body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+            votes: 0,
+            author: "philippaclaire9",
+            review_id: 3,
+            created_at: "2021-03-27T19:49:48.110Z",
+          });
+        });
+    });
+    it("404 Not Found: responds with 'comment_id not found' when passed a comment_id that does not exist", () => {
+      return request(app)
+        .patch("/api/comments/9999")
+        .send({ inc_votes: 1 })
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment_id not found");
+        });
+    });
+    it("400 Bad Request: responds with 'inc_votes not provided' when passed an empty request body", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({})
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("inc_votes not provided");
+        });
+    });
+    it("400 Bad Request: responds with 'inc_votes must be a number' when passed '{inc_votes: 'cat'}'", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: "cat" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("inc_votes must be a number");
+        });
+    });
+    it("400 Bad Request: responds with 'only inc_votes is required' when passed '{inc_votes: 1, author: 'bananac4t'}'", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: 1, author: "bananac4t" })
+        .expect(400)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("only inc_votes is required");
         });
     });
   });
