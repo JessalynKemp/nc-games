@@ -516,7 +516,7 @@ describe("nc-games app", () => {
     });
   });
   describe("PATCH /api/comments/:comment_id", () => {
-    it("200 OK: returns the updated review with +2 votes when { inc_votes : 2 } is received (increase)", () => {
+    it("200 OK: returns the updated comment with +2 votes when { inc_votes : 2 } is received (increase)", () => {
       return request(app)
         .patch("/api/comments/6")
         .send({ inc_votes: 2 })
@@ -526,6 +526,22 @@ describe("nc-games app", () => {
             comment_id: 6,
             body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
             votes: 12,
+            author: "philippaclaire9",
+            review_id: 3,
+            created_at: "2021-03-27T19:49:48.110Z",
+          });
+        });
+    });
+    it("200 OK: returns the updated comment with -10 votes when { inc_votes : -10 } is received (decrease)", () => {
+      return request(app)
+        .patch("/api/comments/6")
+        .send({ inc_votes: -10 })
+        .expect(200)
+        .then(({ body: { comment } }) => {
+          expect(comment).toEqual({
+            comment_id: 6,
+            body: "Not sure about dogs, but my cat likes to get involved with board games, the boxes are their particular favourite",
+            votes: 0,
             author: "philippaclaire9",
             review_id: 3,
             created_at: "2021-03-27T19:49:48.110Z",
