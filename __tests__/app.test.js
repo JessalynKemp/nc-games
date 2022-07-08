@@ -548,6 +548,14 @@ describe("nc-games app", () => {
           });
         });
     });
+    it("404 Not Found: responds with 'comment_id not found' when passed a comment_id that does not exist", () => {
+      return request(app)
+        .patch("/api/comments/9999")
+        .expect(404)
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("comment_id not found");
+        });
+    });
   });
   describe("DELETE /api/comments/:comment_id", () => {
     it("204 No Content: deletes the comment with the given comment_id", () => {

@@ -106,6 +106,8 @@ exports.modifyCommentVotes = (comment_id, inc_votes) => {
     )
     .then((result) => {
       const comment = result.rows[0];
-      return comment;
+      if (!comment) {
+        return notFound("comment_id");
+      } else return comment;
     });
 };
