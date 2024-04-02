@@ -1,7 +1,5 @@
 # Northcoders House of Games API
 
-## Link to the API
-
 ## Project Summary
 
 An API to access the nc-games-jk application's data programmatically and later provide it to frontend architecture.
